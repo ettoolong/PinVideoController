@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "Pin Media Controller",
+    "message": "Pin Video Controller",
     "description": ""
   },
   "extDescription": {
@@ -8,7 +8,7 @@
     "description": ""
   },
   "optionPageTitle": {
-    "message": "Pin Media Controller 設定：",
+    "message": "Pin Video Controller 設定：",
     "description": ""
   },
   "ignoreTinyElement": {
