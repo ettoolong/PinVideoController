@@ -1,0 +1,116 @@
+body {
+  padding: 10px 10px 0px 10px;
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.noVideo {
+  margin-bottom: 10px;
+}
+
+.videoList, .pinedVideoList {
+  display: flex;
+  flex-direction: column;
+}
+
+.thumbnail {
+  position: relative;
+  height: 50px;
+  width: 80px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.thumbnail:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  width: 80px;
+  height: 50px;
+  background-size: 100% 100%;
+  background-color: #fff;
+  opacity: .5;
+  user-select: none;
+  pointer-events: none;
+}
+
+.videoItem {
+  display: flex;
+  flex-direction: column;
+  height: 80px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.videoItem {
+  margin-bottom: 10px;
+}
+
+.ctrlUp {
+  display: flex;
+  flex-direction: row;
+  height: 50px;
+  width: 100%;
+  align-items: center;
+}
+
+.ctrlDown {
+  display: flex;
+  flex-direction: row;
+  height: 30px;
+  width: 100%;
+  align-items: center;
+}
+
+.svg-button {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+.mc-button {
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
+}
+
+.svg-button svg path,
+.mc-button svg path {
+  fill: #aaa;
+}
+
+.svg-button:hover svg path,
+.mc-button:hover svg path {
+  fill: #555;
+}
+
+.svg-button.active svg path,
+.mc-button.active svg path {
+  fill: #000;
+}
+
+.thumbnail .mc-button svg path {
+  fill: #b11;
+}
+
+.thumbnail:hover .mc-button svg path {
+  fill: #f22;
+}
+
+.thumbnail .mc-button svg {
+  z-index: 2;
+  filter: drop-shadow( 0px 0px 2px #222);
+}
+
+.hide {
+  display: none;
+}

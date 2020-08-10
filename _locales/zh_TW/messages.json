@@ -1,0 +1,94 @@
+{
+  "extName": {
+    "message": "Pin Media Controller",
+    "description": ""
+  },
+  "extDescription": {
+    "message": "在工具列加入一個按鈕，提供目前頁面影片額外的播放操作",
+    "description": ""
+  },
+  "optionPageTitle": {
+    "message": "Pin Media Controller 設定：",
+    "description": ""
+  },
+  "ignoreTinyElement": {
+    "message": "忽略小型元素：",
+    "description": ""
+  },
+  "minWidth": {
+    "message": "最小寬度",
+    "description": ""
+  },
+  "minHeight": {
+    "message": "最小高度",
+    "description": ""
+  },
+  "iconColor": {
+    "message": "工具列圖示顏色",
+    "description": ""
+  },
+  "iconColorBlack": {
+    "message": "黑",
+    "description": ""
+  },
+  "iconColorWhite": {
+    "message": "白",
+    "description": ""
+  },
+  "execute": {
+    "message": "顯示控制面板",
+    "description": ""
+  },
+  "btnPin": {
+    "message": "釘選",
+    "description": ""
+  },
+  "btnPlay": {
+    "message": "播放",
+    "description": ""
+  },
+  "btnPause": {
+    "message": "暫停",
+    "description": ""
+  },
+  "btnToStart": {
+    "message": "跳到開頭",
+    "description": ""
+  },
+  "btnToEnd": {
+    "message": "跳到結尾",
+    "description": ""
+  },
+  "btnFastBackword": {
+    "message": "後退數秒",
+    "description": ""
+  },
+  "btnFastForward": {
+    "message": "前進數秒",
+    "description": ""
+  },
+  "btnMute": {
+    "message": "靜音",
+    "description": ""
+  },
+  "btnUnmute": {
+    "message": "取消靜音",
+    "description": ""
+  },
+  "btnSlow": {
+    "message": "減速",
+    "description": ""
+  },
+  "btnFast": {
+    "message": "加速",
+    "description": ""
+  },
+  "btnNormalSpeed": {
+    "message": "1倍速播放",
+    "description": ""
+  },
+  "noVideo": {
+    "message": "沒有影片",
+    "description": ""
+  }
+}

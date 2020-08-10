@@ -1,0 +1,94 @@
+{
+  "extName": {
+    "message": "Pin Video Controller",
+    "description": ""
+  },
+  "extDescription": {
+    "message": "Add extra video controller on toolbar button.",
+    "description": ""
+  },
+  "optionPageTitle": {
+    "message": "Pin Video Controller Preferences:",
+    "description": ""
+  },
+  "ignoreTinyElement": {
+    "message": "Ignore tiny element:",
+    "description": ""
+  },
+  "minWidth": {
+    "message": "Minimum width",
+    "description": ""
+  },
+  "minHeight": {
+    "message": "Minimum height",
+    "description": ""
+  },
+  "iconColor": {
+    "message": "Toolbar button icon color",
+    "description": ""
+  },
+  "iconColorBlack": {
+    "message": "Black",
+    "description": ""
+  },
+  "iconColorWhite": {
+    "message": "White",
+    "description": ""
+  },
+  "execute": {
+    "message": "Show controller panel",
+    "description": ""
+  },
+  "btnPin": {
+    "message": "Pin",
+    "description": ""
+  },
+  "btnPlay": {
+    "message": "Play",
+    "description": ""
+  },
+  "btnPause": {
+    "message": "Pause",
+    "description": ""
+  },
+  "btnToStart": {
+    "message": "To Start",
+    "description": ""
+  },
+  "btnToEnd": {
+    "message": "To End",
+    "description": ""
+  },
+  "btnFastBackword": {
+    "message": "Backword",
+    "description": ""
+  },
+  "btnFastForward": {
+    "message": "Forward",
+    "description": ""
+  },
+  "btnMute": {
+    "message": "Mute",
+    "description": ""
+  },
+  "btnUnmute": {
+    "message": "Unmute",
+    "description": ""
+  },
+  "btnSlow": {
+    "message": "Slow",
+    "description": ""
+  },
+  "btnFast": {
+    "message": "Fast",
+    "description": ""
+  },
+  "btnNormalSpeed": {
+    "message": "Normal Speed",
+    "description": ""
+  },
+  "noVideo": {
+    "message": "No Video",
+    "description": ""
+  }
+}

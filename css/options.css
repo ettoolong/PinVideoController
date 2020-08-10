@@ -1,0 +1,18 @@
+div.col {
+  vertical-align: top;
+  display: inline-block;
+}
+
+.itemDiv {
+  display: block;
+  margin-top:16px;
+}
+
+.itemLabel {
+  display: inline-block;
+  width: 60px;
+}
+
+.delayForHideCursor {
+  width: 50px;
+}
