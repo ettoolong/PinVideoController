@@ -1,5 +1,5 @@
 let videoElementMapping = {};
-let pinedVideos = []
+let pinnedVideos = []
 let activedTabs = {}
 
 let defaultPreference = {
@@ -70,25 +70,25 @@ window.addEventListener('DOMContentLoaded', event => {
 
 chrome.tabs.onRemoved.addListener((tabId) => {
   delete activedTabs[tabId]
-  pinedVideos = pinedVideos.filter(v => v.tabId !== tabId)
+  pinnedVideos = pinnedVideos.filter(v => v.tabId !== tabId)
 });
 
 function pinVideo(video) {
-  if (!isPined(video.hashCode)) {
-    pinedVideos.push({...video})
+  if (!isPinned(video.hashCode)) {
+    pinnedVideos.push({...video})
   }
 }
 
 function unpinVideo(hashCode) {
-  pinedVideos = pinedVideos.filter(v => v.hashCode !== hashCode)
+  pinnedVideos = pinnedVideos.filter(v => v.hashCode !== hashCode)
 }
 
-function isPined(hashCode) {
-  return pinedVideos.find(v => v.hashCode === hashCode)
+function isPinned(hashCode) {
+  return pinnedVideos.find(v => v.hashCode === hashCode)
 }
 
-function getPinedVideos() {
-  return pinedVideos
+function getPinnedVideos() {
+  return pinnedVideos
 }
 
 function getActivedTabs() {
@@ -110,7 +110,7 @@ function unmountEventListener(videos) {
 
 const messageHandler = (message, sender, sendResponse) => {
   if (message.action === 'videoUnload') {
-    pinedVideos = pinedVideos.filter(v => v.hashCode !== message.hashCode)
+    pinnedVideos = pinnedVideos.filter(v => v.hashCode !== message.hashCode)
   }
   else if (message.action === 'activeTab') {
     activedTabs[sender.tab.id] = true

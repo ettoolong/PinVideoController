@@ -188,7 +188,7 @@ chrome.runtime.onMessage.addListener( (message, sender, sendResponse) => {
       muted: node.muted,
       duration: node.duration,
       currentTime: node.currentTime,
-      pined: true,
+      pinned: true,
       action: 'addVideoElement'
     });
   } else if (message.action === 'mc:play') {

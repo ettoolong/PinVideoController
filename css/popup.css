@@ -11,7 +11,7 @@ body {
   margin-bottom: 10px;
 }
 
-.videoList, .pinedVideoList {
+.videoList, .pinnedVideoList {
   display: flex;
   flex-direction: column;
 }

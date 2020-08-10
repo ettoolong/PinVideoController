@@ -52,7 +52,7 @@ function createRangeInput(min, max, value, width, marginTop ,name) {
   return input
 }
 
-function createRow(data, sender, pined) {
+function createRow(data, sender, pinned) {
   document.querySelector('.noVideo').setAttribute('class', 'hide')
 
   const parent = document.createElement('div')
@@ -95,14 +95,14 @@ function createRow(data, sender, pined) {
   // thumbnail.appendChild(img)
   row.appendChild(thumbnail)
 
-  if (pined) buttonPin.classList.add('active')
+  if (pinned) buttonPin.classList.add('active')
   buttonPin.addEventListener('click', () => {
     const hashCode = parent.getAttribute('id')
     const tabId = parseInt(parent.getAttribute('tabId'))
     const frameId = parseInt(parent.getAttribute('frameId'))
     browser.runtime.getBackgroundPage().then(page => {
       const elems = document.querySelectorAll(`[id=${hashCode}] .svg-button`)
-      if (page.isPined(hashCode)) {
+      if (page.isPinned(hashCode)) {
         for (const e of elems) {
           e.classList.remove('active')
         }
@@ -315,9 +315,9 @@ function createRow(data, sender, pined) {
   //   svgMapping.fast
   // )
 
-  if (data.pined) {
+  if (data.pinned) {
     buttonPin.classList.add('active')
-    document.querySelector('.pinedVideoList').appendChild(parent)
+    document.querySelector('.pinnedVideoList').appendChild(parent)
   } else {
     document.querySelector('.videoList').appendChild(parent)
   }
@@ -387,10 +387,10 @@ function updateStatus(row, data) {
 }
 
 browser.runtime.getBackgroundPage().then(page => {
-  const pinedVideos = page.getPinedVideos()
+  const pinnedVideos = page.getPinnedVideos()
   const activedTabs = page.getActivedTabs()
   const preferences = page.getPreferences()
-  const pinVideoMapping = pinedVideos.reduce((acc, cur) => {acc[cur.hashCode] = cur;return acc;}, {})
+  const pinVideoMapping = pinnedVideos.reduce((acc, cur) => {acc[cur.hashCode] = cur;return acc;}, {})
   const messageHandler = (message, sender, sendResponse) => {
     if (message.action === 'execContentScript') {
       chrome.tabs.executeScript(sender.tab.Id, {
@@ -412,7 +412,7 @@ browser.runtime.getBackgroundPage().then(page => {
     } else if (message.action === 'updateStatus') {
       const row = document.querySelector(`.videoList [id=${message.hashCode}]`)
       if (row) updateStatus(row, message)
-      const row2 = document.querySelector(`.pinedVideoList [id=${message.hashCode}]`)
+      const row2 = document.querySelector(`.pinnedVideoList [id=${message.hashCode}]`)
       if (row2) updateStatus(row2, message)
     }
   }
@@ -421,7 +421,7 @@ browser.runtime.getBackgroundPage().then(page => {
   chrome.tabs.query({active: true, currentWindow: true}, tabs => {
     if ((typeof tabs !== 'undefined') && (tabs.length > 0)) {
       const currentTab = tabs[0];
-      for (const v of pinedVideos) {
+      for (const v of pinnedVideos) {
         if (v.tabId !== currentTab.id) {
           chrome.tabs.sendMessage(v.tabId, {
             action: 'updateStatus',
@@ -440,7 +440,7 @@ browser.runtime.getBackgroundPage().then(page => {
   });
 
   browser.runtime.getBackgroundPage().then(page => {
-    const pinedVideos = page.getPinedVideos()
+    const pinnedVideos = page.getPinnedVideos()
     //
   })
 }, error => {
