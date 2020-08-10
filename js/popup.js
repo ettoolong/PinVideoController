@@ -53,7 +53,7 @@ function createRangeInput(min, max, value, width, marginTop ,name) {
 }
 
 function createRow(data, sender, pinned) {
-  document.querySelector('.noVideo').setAttribute('class', 'hide')
+  document.querySelector('.noVideo').classList.add('hide')
 
   const parent = document.createElement('div')
   parent.setAttribute('id', data.hashCode)
