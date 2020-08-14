@@ -87,6 +87,10 @@
     "message": "1倍速播放",
     "description": ""
   },
+  "btnLoop": {
+    "message": "重複播放",
+    "description": ""
+  },
   "noVideo": {
     "message": "沒有影片",
     "description": ""

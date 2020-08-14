@@ -87,6 +87,10 @@
     "message": "Normal Speed",
     "description": ""
   },
+  "btnLoop": {
+    "message": "Loop",
+    "description": ""
+  },
   "noVideo": {
     "message": "No Video",
     "description": ""
