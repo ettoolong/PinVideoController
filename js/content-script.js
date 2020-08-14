@@ -1,5 +1,5 @@
 const HASHCODE_LENGTH = 32;
-let mcImpl = {};
+let mcImpl = {observers: {}};
 let idCount = 0;
 mcImpl.updateTimer = null;
 
@@ -20,16 +20,26 @@ function capture (video) {
   let w = 50;
   let h = 50;
   if(scale > 1) {
-    w = video.videoWidth / scale
-    h = video.videoHeight / scale
+    w = Math.ceil(video.videoWidth / scale)
+    h = Math.ceil(video.videoHeight / scale)
   }
 
   let canvas = document.createElement('canvas');
   canvas.width = w;
   canvas.height = h;
   let ctx = canvas.getContext('2d');
+  // video.crossOrigin = 'Anonymous';  // This enables CORS
   ctx.drawImage(video, 0, 0, w, h);
-  let dataURI = canvas.toDataURL('image/jpeg');
+  let dataURI = ''
+  try {
+    dataURI = canvas.toDataURL('image/png');
+  } catch (ex) {
+    ctx.beginPath();
+    ctx.rect(0, 0, w, h);
+    ctx.fillStyle = 'black';
+    ctx.fill();
+    dataURI = canvas.toDataURL('image/png');
+  }
   return dataURI;
 }
 
@@ -107,8 +117,18 @@ function onVideoTimeUpdate(e) {
   });
 }
 
+function onLoopStatusChange(video) {
+  let mcHashCode = video.getAttribute('mcHashCode');
+  chrome.runtime.sendMessage({
+    action: 'updateStatus',
+    hashCode: mcHashCode,
+    loop: video.loop,
+  });
+}
+
 function mountEventListener(elem) {
   if (!elem.getAttribute('mc-el')) {
+    let mcHashCode = elem.getAttribute('mcHashCode');
     elem.setAttribute('mc-el', true)
     elem.addEventListener('play', onVideoPlay, true);
     elem.addEventListener('pause', onVideoPause, true);
@@ -117,16 +137,29 @@ function mountEventListener(elem) {
     if (!elem.paused) {
       elem.addEventListener('timeupdate', onVideoTimeUpdate, true);
     }
+    let observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        onLoopStatusChange(mutation.target)
+      });
+    });
+    let config = { attributes: true, attributeFilter: ['loop']};
+    observer.observe(elem, config);
+    mcImpl.observers[mcHashCode] = observer;
   }
 }
 
 function unmountEventListener(elem) {
+  let mcHashCode = elem.getAttribute('mcHashCode');
   elem.removeAttribute('mc-el')
   elem.removeEventListener('play', onVideoPlay, true);
   elem.removeEventListener('pause', onVideoPause, true);
   elem.removeEventListener('volumechange', onVideoVolumeChange, true);
   elem.removeEventListener('durationchange', onVideoDurationChange, true);
   elem.removeEventListener('timeupdate', onVideoTimeUpdate, true);
+  if (mcHashCode && mcImpl.observers[mcHashCode]) {
+    mcImpl.observers[mcHashCode].disconnect();
+    mcImpl.observers[mcHashCode] = null;
+  }
 }
 
 function uploadElemInfo(elements, minWidth, minHeight, onlyUpdateNewElem) {
@@ -144,6 +177,7 @@ function uploadElemInfo(elements, minWidth, minHeight, onlyUpdateNewElem) {
         paused: elem.paused,
         volume: elem.volume,
         muted: elem.muted,
+        loop: elem.loop,
         duration: elem.duration,
         currentTime: elem.currentTime,
         action: 'addVideoElement'
@@ -207,6 +241,9 @@ chrome.runtime.onMessage.addListener( (message, sender, sendResponse) => {
   } else if (message.action === 'mc:toEnd') {
     const node = getVNode(message.hashCode)
     if (node) { node.currentTime = node.duration }
+  } else if (message.action === 'mc:loop') {
+    const node = getVNode(message.hashCode)
+    node.loop = !node.loop
   } else if (message.action === 'mc:volume') {
     getVNode(message.hashCode).volume = message.value/100.0
   } else if (message.action === 'mc:mute') {

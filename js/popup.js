@@ -12,6 +12,7 @@ const svgMapping = {
   volumeOff: 'M215 71l-89 89H24a24 24 0 0 0-24 24v144a24 24 0 0 0 24 24h102.06L215 441c15 15 41 4.47 41-17V88c0-21.47-26-32-41-17z',
   slow: 'M223.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L319.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L393.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34zm-192 34l136 136c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L127.9 256l96.4-96.4c9.4-9.4 9.4-24.6 0-33.9L201.7 103c-9.4-9.4-24.6-9.4-33.9 0l-136 136c-9.5 9.4-9.5 24.6-.1 34z',
   fast: 'M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34zm192-34l-136-136c-9.4-9.4-24.6-9.4-33.9 0l-22.6 22.6c-9.4 9.4-9.4 24.6 0 33.9l96.4 96.4-96.4 96.4c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0l136-136c9.4-9.2 9.4-24.4 0-33.8z',
+  loop: 'M370.72 133.28C339.458 104.008 298.888 87.962 255.848 88c-77.458.068-144.328 53.178-162.791 126.85-1.344 5.363-6.122 9.15-11.651 9.15H24.103c-7.498 0-13.194-6.807-11.807-14.176C33.933 94.924 134.813 8 256 8c66.448 0 126.791 26.136 171.315 68.685L463.03 40.97C478.149 25.851 504 36.559 504 57.941V192c0 13.255-10.745 24-24 24H345.941c-21.382 0-32.09-25.851-16.971-40.971l41.75-41.749zM32 296h134.059c21.382 0 32.09 25.851 16.971 40.971l-41.75 41.75c31.262 29.273 71.835 45.319 114.876 45.28 77.418-.07 144.315-53.144 162.787-126.849 1.344-5.363 6.122-9.15 11.651-9.15h57.304c7.498 0 13.194 6.807 11.807 14.176C478.067 417.076 377.187 504 256 504c-66.448 0-126.791-26.136-171.315-68.685L48.97 471.03C33.851 486.149 8 475.441 8 454.059V320c0-13.255 10.745-24 24-24z',
 }
 
 function createSvg(name, title, className, viewBox, d) {
@@ -70,7 +71,23 @@ function createRow(data, sender, pinned) {
   parent.appendChild(row)
   parent.appendChild(row2)
 
-  const timeCtrl = createRangeInput(0, data.duration, data.currentTime, '100%', '0px', 'time')
+  const buttonLoop = createSvg(
+    'loop',
+    chrome.i18n.getMessage('btnLoop'),
+    'svg-button',
+    '0 0 512 512',
+    svgMapping.loop
+  )
+  if (data.loop) buttonLoop.classList.add('active')
+  row2.appendChild(buttonLoop)
+  buttonLoop.addEventListener('click', () => {
+    chrome.tabs.sendMessage(sender.tab.id, {
+      action: 'mc:loop',
+      hashCode: data.hashCode,
+    }, {frameId: sender.frameId});
+  })
+
+  const timeCtrl = createRangeInput(0, data.duration, data.currentTime, '100%', '6px', 'time')
   row2.appendChild(timeCtrl)
   timeCtrl.addEventListener('input', (e) => {
     chrome.tabs.sendMessage(sender.tab.id, {
@@ -382,6 +399,14 @@ function updateStatus(row, data) {
     const ctrlTime = row.querySelector('[ctrlName=time]')
     if (ctrlTime.value != (data.volume)) {
       ctrlTime.value = data.currentTime
+    }
+  }
+  if (data.loop !== undefined) {
+    const buttonLoop = row.querySelector('[ctrlName=loop]')
+    if (data.loop) {
+      buttonLoop.classList.add('active')
+    } else {
+      buttonLoop.classList.remove('active')
     }
   }
 }
