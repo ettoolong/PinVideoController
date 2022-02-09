@@ -28,6 +28,26 @@
         </div>
 
         <div class="itemDiv">
+          <div class="col">
+            <label data-l10n-id="speedOptions">Ignore tiny element:</label>
+          </div>
+          <div class="col">
+            <div>
+              <input type="text" id="speedOptions">
+            </div>
+            <div id="speedController" type="radioGroup">
+              <label data-l10n-id="speedOptionUI">Playing speed UI</label>
+              <input type="radio" id="NoSpeedUI" name="speedController" value="0">
+              <label for="NoSpeedUI" data-l10n-id="NoSpeedUI">Black</label>
+              <input type="radio" id="SpeedDropdownUI" name="speedController" value="1">
+              <label for="SpeedDropdownUI" data-l10n-id="SpeedDropdownUI">White</label>
+              <input type="radio" id="SpeedSliderUI" name="speedController" value="2">
+              <label for="SpeedSliderUI" data-l10n-id="SpeedSliderUI">White</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="itemDiv">
           <div id="iconColor" type="radioGroup">
             <label data-l10n-id="iconColor">Toolbar button icon color</label>
             <input type="radio" id="iconColorBlack" name="iconColor" value="0">

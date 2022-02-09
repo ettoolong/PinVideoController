@@ -15,6 +15,9 @@ const svgMapping = {
   loop: 'M370.72 133.28C339.458 104.008 298.888 87.962 255.848 88c-77.458.068-144.328 53.178-162.791 126.85-1.344 5.363-6.122 9.15-11.651 9.15H24.103c-7.498 0-13.194-6.807-11.807-14.176C33.933 94.924 134.813 8 256 8c66.448 0 126.791 26.136 171.315 68.685L463.03 40.97C478.149 25.851 504 36.559 504 57.941V192c0 13.255-10.745 24-24 24H345.941c-21.382 0-32.09-25.851-16.971-40.971l41.75-41.749zM32 296h134.059c21.382 0 32.09 25.851 16.971 40.971l-41.75 41.75c31.262 29.273 71.835 45.319 114.876 45.28 77.418-.07 144.315-53.144 162.787-126.849 1.344-5.363 6.122-9.15 11.651-9.15h57.304c7.498 0 13.194 6.807 11.807 14.176C478.067 417.076 377.187 504 256 504c-66.448 0-126.791-26.136-171.315-68.685L48.97 471.03C33.851 486.149 8 475.441 8 454.059V320c0-13.255 10.745-24 24-24z',
 }
 
+let speedOptions = [1]
+let speedController = 0
+
 function createSvg(name, title, className, viewBox, d) {
   const svgNS = 'http://www.w3.org/2000/svg'
   const svgButton = document.createElement('div')
@@ -40,7 +43,22 @@ function createSvg(name, title, className, viewBox, d) {
   return svgButton
 }
 
-function createRangeInput(min, max, value, width, marginTop ,name) {
+function createSelectOptions(options, value, name) {
+  const select = document.createElement('select')
+  for (const i in options) {
+    const key = options[i]
+    const option = document.createElement('option')
+    option.value = key
+    option.textContent = `${key}X`
+    if (Number(i) === value) {
+      option.selected = true
+    }
+    select.appendChild(option)
+  }
+  return select
+}
+
+function createRangeInput(min, max, value, width, marginTop, name) {
   const input = document.createElement('input')
   input.setAttribute('ctrlName', name)
   input.setAttribute('type', 'range')
@@ -64,6 +82,12 @@ function createRow(data, sender, pinned) {
   parent.classList.add('videoItem')
   const row = document.createElement('div')
   row.classList.add('ctrlUp')
+
+  const rightPanel = document.createElement('div')
+  rightPanel.classList.add('ctrlRight')
+
+  const drPanel = document.createElement('div')
+  drPanel.classList.add('drPanel')
 
   const row2 = document.createElement('div')
   row2.classList.add('ctrlDown')
@@ -118,16 +142,12 @@ function createRow(data, sender, pinned) {
     const tabId = parseInt(parent.getAttribute('tabId'))
     const frameId = parseInt(parent.getAttribute('frameId'))
     browser.runtime.getBackgroundPage().then(page => {
-      const elems = document.querySelectorAll(`[id=${hashCode}] .svg-button`)
+      const elem = document.querySelector(`[id=${hashCode}] .svg-button[ctrlName=pin]`)
       if (page.isPinned(hashCode)) {
-        for (const e of elems) {
-          e.classList.remove('active')
-        }
+        elem.classList.remove('active')
         page.unpinVideo(hashCode)
       } else {
-        for (const e of elems) {
-          e.classList.add('active')
-        }
+        elem.classList.add('active')
         page.pinVideo({hashCode, tabId, frameId})
       }
     })
@@ -277,10 +297,56 @@ function createRow(data, sender, pinned) {
     '0 0 256 512',
     svgMapping.volumeOff
   )
-  row.appendChild(buttonMute)
-  row.appendChild(buttonVolumeDown)
-  row.appendChild(buttonVolumeUp)
-  row.appendChild(buttonVolumeOff)
+  row.appendChild(rightPanel)
+
+  if (speedController !== 0) {
+    const urPanel = document.createElement('div')
+    urPanel.classList.add('urPanel')
+    rightPanel.appendChild(urPanel)
+
+    let speedIndex = speedOptions.indexOf(data.playbackRate)
+    if (speedIndex === - 1) {
+      speedIndex = speedOptions.indexOf(1)
+    }
+    if ( speedController === 1) {
+      const speedLabel = document.createElement('div')
+      speedLabel.classList.add('speedLabel')
+      urPanel.appendChild(speedLabel)
+      speedLabel.textContent = chrome.i18n.getMessage('speed')
+      const speedCtrl = createSelectOptions(speedOptions, speedIndex, 'speed')
+      urPanel.appendChild(speedCtrl)
+      speedCtrl.addEventListener('change', (e) => {
+        chrome.tabs.sendMessage(sender.tab.id, {
+          action: 'mc:speed',
+          value: e.target.value,
+          hashCode: data.hashCode,
+        }, {frameId: sender.frameId});
+      })
+    }
+    else if (speedController === 2) {
+      const speedLabel = document.createElement('div')
+      speedLabel.classList.add('speedLabel')
+      urPanel.appendChild(speedLabel)
+      speedLabel.textContent = `${data.playbackRate}X`
+
+      const speedCtrl = createRangeInput(0, speedOptions.length - 1, speedIndex, '70px', '6px', 'speed')
+      urPanel.appendChild(speedCtrl)
+      speedCtrl.addEventListener('input', (e) => {
+        speedLabel.textContent = `${speedOptions[e.target.value]}X`
+        chrome.tabs.sendMessage(sender.tab.id, {
+          action: 'mc:speed',
+          value: speedOptions[e.target.value],
+          hashCode: data.hashCode,
+        }, {frameId: sender.frameId});
+      })
+    }
+  }
+  rightPanel.appendChild(drPanel)
+
+  drPanel.appendChild(buttonMute)
+  drPanel.appendChild(buttonVolumeDown)
+  drPanel.appendChild(buttonVolumeUp)
+  drPanel.appendChild(buttonVolumeOff)
   buttonMute.addEventListener('click', () => {
     chrome.tabs.sendMessage(sender.tab.id, {
       action: 'mc:unmute',
@@ -307,7 +373,7 @@ function createRow(data, sender, pinned) {
   })
 
   const volumeCtrl = createRangeInput(0, 100, data.volume * 100, '80px', '6px', 'volume')
-  row.appendChild(volumeCtrl)
+  drPanel.appendChild(volumeCtrl)
   volumeCtrl.addEventListener('input', (e) => {
     chrome.tabs.sendMessage(sender.tab.id, {
       action: 'mc:volume',
@@ -390,23 +456,27 @@ function updateStatus(row, data) {
   }
   if (data.duration !== undefined) {
     const ctrlTime = row.querySelector('[ctrlName=time]')
-    const max = ctrlTime.getAttribute('max')
-    if (max != (data.duration)) {
-      ctrlTime.setAttribute('max', data.duration)
+    if (ctrlTime) {
+      const max = ctrlTime.getAttribute('max')
+      if (max != (data.duration)) {
+        ctrlTime.setAttribute('max', data.duration)
+      }
     }
   }
   if (data.currentTime !== undefined) {
     const ctrlTime = row.querySelector('[ctrlName=time]')
-    if (ctrlTime.value != (data.volume)) {
+    if (ctrlTime && ctrlTime.value != (data.volume)) {
       ctrlTime.value = data.currentTime
     }
   }
   if (data.loop !== undefined) {
     const buttonLoop = row.querySelector('[ctrlName=loop]')
-    if (data.loop) {
-      buttonLoop.classList.add('active')
-    } else {
-      buttonLoop.classList.remove('active')
+    if (buttonLoop) {
+      if (data.loop) {
+        buttonLoop.classList.add('active')
+      } else {
+        buttonLoop.classList.remove('active')
+      }
     }
   }
 }
@@ -415,6 +485,13 @@ browser.runtime.getBackgroundPage().then(page => {
   const pinnedVideos = page.getPinnedVideos()
   const activedTabs = page.getActivedTabs()
   const preferences = page.getPreferences()
+  speedOptions = [
+    1,
+    ...preferences.speedOptions.split(',')
+      .map(i => Number(i.trim() || '0'))
+      .filter(i => !isNaN(i) && i > 0 )
+  ].sort()
+  speedController = preferences.speedController
   const pinVideoMapping = pinnedVideos.reduce((acc, cur) => {acc[cur.hashCode] = cur;return acc;}, {})
   const messageHandler = (message, sender, sendResponse) => {
     if (message.action === 'execContentScript') {

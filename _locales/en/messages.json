@@ -35,8 +35,32 @@
     "message": "White",
     "description": ""
   },
+  "speedOptions": {
+    "message": "Playing speed options:",
+    "description": ""
+  },
+  "speedOptionUI": {
+    "message": "Controller",
+    "description": ""
+  },
+  "NoSpeedUI": {
+    "message": "Hidden",
+    "description": ""
+  },
+  "SpeedDropdownUI": {
+    "message": "Dropdown",
+    "description": ""
+  },
+  "SpeedSliderUI": {
+    "message": "Slider",
+    "description": ""
+  },
   "execute": {
     "message": "Show controller panel",
+    "description": ""
+  },
+  "speed": {
+    "message": "Speed",
     "description": ""
   },
   "btnPin": {

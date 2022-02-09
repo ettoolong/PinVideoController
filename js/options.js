@@ -20,6 +20,11 @@ const handleVelueChange = id => {
         saveToPreference(id, parseInt(elem.value));
       });
     }
+    else if(elemType === 'text') {
+      elem.addEventListener('input', event => {
+        saveToPreference(id, elem.value);
+      });
+    }
     else if(elemType === 'option') {
       elem.addEventListener('input', event => {
         saveToPreference(id, parseInt(elem.value));
@@ -45,6 +50,9 @@ const setValueToElem = (id, value) => {
       elem.checked = value;
     }
     if(elemType === 'number') {
+      elem.value = value;
+    }
+    else if(elemType === 'text') {
       elem.value = value;
     }
     else if(elemType === 'option') {

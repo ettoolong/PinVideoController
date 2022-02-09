@@ -6,8 +6,10 @@ let defaultPreference = {
   minWidth: 100,
   minHeight: 100,
   autoHideCursor: false,
+  speedOptions: '0.25,0.5,0.75,1.25,1.5,1.75,2',
+  speedController: 0,
   iconColor: 0,
-  version: 1
+  version: 2
 };
 let preferences = {};
 

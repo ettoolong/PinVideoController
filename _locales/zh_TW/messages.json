@@ -35,8 +35,32 @@
     "message": "白",
     "description": ""
   },
+  "speedOptions": {
+    "message": "播放速度選項：",
+    "description": ""
+  },
+  "speedOptionUI": {
+    "message": "介面",
+    "description": ""
+  },
+  "NoSpeedUI": {
+    "message": "不顯示",
+    "description": ""
+  },
+  "SpeedDropdownUI": {
+    "message": "下拉選單",
+    "description": ""
+  },
+  "SpeedSliderUI": {
+    "message": "滑桿",
+    "description": ""
+  },
   "execute": {
     "message": "顯示控制面板",
+    "description": ""
+  },
+  "speed": {
+    "message": "速度",
     "description": ""
   },
   "btnPin": {

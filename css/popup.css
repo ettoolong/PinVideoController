@@ -54,6 +54,45 @@ body {
   margin-bottom: 10px;
 }
 
+select {
+  border: none;
+  overflow: hidden;
+  background-color: #fff;
+}
+select:focus {
+  outline: none;
+}
+
+.speedLabel {
+  height: 20px;
+  width: 40px;
+  text-align: right;
+}
+
+.ctrlRight {
+  display: flex;
+  flex-direction: column;
+  /* height: 100px; */
+  width: 110px;
+  align-items: center;
+}
+
+.urPanel {
+  display: flex;
+  flex-direction: row;
+  height: 20px;
+  width: 100%;
+  align-items: center;
+}
+
+.drPanel {
+  display: flex;
+  flex-direction: row;
+  height: 30px;
+  width: 100%;
+  align-items: center;
+}
+
 .ctrlUp {
   display: flex;
   flex-direction: row;

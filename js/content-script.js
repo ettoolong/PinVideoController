@@ -178,6 +178,7 @@ function uploadElemInfo(elements, minWidth, minHeight, onlyUpdateNewElem) {
         volume: elem.volume,
         muted: elem.muted,
         loop: elem.loop,
+        playbackRate: elem.playbackRate,
         duration: elem.duration,
         currentTime: elem.currentTime,
         action: 'addVideoElement'
@@ -244,6 +245,8 @@ chrome.runtime.onMessage.addListener( (message, sender, sendResponse) => {
   } else if (message.action === 'mc:loop') {
     const node = getVNode(message.hashCode)
     node.loop = !node.loop
+  } else if (message.action === 'mc:speed') {
+    getVNode(message.hashCode).playbackRate = message.value
   } else if (message.action === 'mc:volume') {
     getVNode(message.hashCode).volume = message.value/100.0
   } else if (message.action === 'mc:mute') {
